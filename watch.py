@@ -26,6 +26,7 @@ if __name__ == "__main__":
     if args.map:
         hash_watch_folders(config)
     if args.cli:
+<<<<<<< HEAD
         while True:
             accessed_files = check_accessed(config)
             if len(accessed_files)>0:
@@ -45,3 +46,21 @@ if __name__ == "__main__":
             check_iptables()
             check_auth_log()
             time.sleep(30)
+=======
+        accessed_files = check_accessed(config)
+        if len(accessed_files) > 0:
+            print("File Accessed inside folder")
+            print(accessed_files)
+        else:
+            print("Files not Accessed since last check")
+        hash_files = check_hash(config)
+        if(len(hash_files) > 0):
+            print("Integrity Check Failed")
+            print(hash_files)
+            hash_watch_folders(config)
+        else:
+            print("File Integrity Intact")
+
+        check_iptables()
+        check_auth_log()
+>>>>>>> aab30e8759fae400e1ac8ba98ec4da236347ab32
