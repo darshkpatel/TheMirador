@@ -1,2 +1,4 @@
 __*
 .vscode
+watch.conf
+*.pyc
