@@ -1,7 +1,6 @@
-import json
 from helpers import *
-
-
+from iptables import check_iptables
+from auth_log import check_auth_log
 if __name__ == "__main__":
     from argparse import ArgumentParser
     import sys
@@ -19,6 +18,25 @@ if __name__ == "__main__":
     print("Watching Folders: ")
     for folder in config["watch_folders"]:
         print("\t"+folder)
-    # first_run(config)
-    # check_hash(config)
-    check_accessed(config)
+    if not os.path.isdir(config["work_dir"]):
+        print("Baseline Not Generated, Generating")
+        first_run(config)
+    if args.map:
+        hash_watch_folders(config)
+    if args.cli:
+        accessed_files = check_accessed(config)
+        if len(accessed_files)>0:
+            print("File Accessed inside folder")
+            print(accessed_files)
+        else:
+            print("Files not Accessed since last check")
+        hash_files = check_hash(config)
+        if(len(hash_files)>0):
+            print("Integrity Check Failed")
+            print(hash_files)
+            hash_watch_folders(config)
+        else:
+            print("File Integrity Intact")
+        
+        check_iptables()
+        check_auth_log()

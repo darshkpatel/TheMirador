@@ -2,18 +2,21 @@ import subprocess
 import datetime
 import time
 import sys
-import json
+import json,os
 
 f = open("watch.conf", "r")
 LOGS_PATH = json.load(f)["logpath"]
 f.close()
 LOG_FILE_PATH = LOGS_PATH + "auth_access.log"
 LAST_REPORTED_PATH = LOGS_PATH+".lastreported"
-
+DEVNULL = open(os.devnull, 'wb')
 
 def update_auth_logs():
     cmd = ["cat", "/var/log/auth.log"]
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    try:
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=DEVNULL)
+    except Exception as e:
+        return
     with open(LOG_FILE_PATH, "w") as logfile:
         for line in proc.stdout.readlines():
             line_timestamp = line[0:15]
@@ -26,14 +29,18 @@ def update_auth_logs():
     f.write(str(line_timestamp))
     f.close()
 
-
-with open(LAST_REPORTED_PATH, "r") as f:
+def check_auth_log():
     try:
-        timestamp = float(f.read())
-        if timestamp > time.time():
-            # send_mail()  # send a mail to the sysadmin
-            pass
-        else:
-            update_auth_logs()
-    except ValueError:  # case when the file is an empty file.
-        update_auth_logs()
+        with open(LAST_REPORTED_PATH, "r") as f:
+            try:
+                timestamp = float(f.read())
+                if timestamp > time.time():
+                    # send_mail()  # send a mail to the sysadmin
+                    print("Something found in Auth Logs ")
+                    pass
+                else:
+                    update_auth_logs()
+            except ValueError:  # case when the file is an empty file.
+                update_auth_logs()
+    except Exception as e:
+        return
