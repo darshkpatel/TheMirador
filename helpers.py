@@ -33,10 +33,15 @@ def hash_watch_folders(config):
             'hex_folder': hex_folder,
             'path': folder 
         })
-        hashes = hash_folder(config, folder)
+        hashes = str(hash_folder(config, folder))
         path = work_dir+'/'+hex_folder
-        with open(path,'wb') as f:
-            f.write(hashes)
-            print("Wrote at {}".format(path))
+        final_json = []
+        for line in hashes.split("\\n")[:-1]:
+            hash_path = line.split(' ')
+            final_json.append({'hash':hash_path[0], 'location':hash_path[2]})
+        print(final_json)
+        #with open(path,'wb') as f:
+        #    f.write(hashes)
+        #    print("Wrote at {}".format(path))
 
     
