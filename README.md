@@ -10,3 +10,4 @@
 *  Rootkit Detection
 *  Sanity Checks for input params
 *  Systemd service 
+*  LogRotation Support
