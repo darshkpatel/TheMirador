@@ -11,4 +11,6 @@
 *  Rootkit Detection
 *  Sanity Checks for input params
 *  Systemd service 
+* Not in sudoers
 *  LogRotation Support
+* logs for incident for forensics
