@@ -21,6 +21,5 @@ if __name__ == "__main__":
     print("Watching Folders: ")
     for folder in config["watch_folders"]:
         print("\t"+folder)
-    first_run(config)
-
-    
+    #first_run(config)
+    #check_hash(config)
