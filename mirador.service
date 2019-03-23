@@ -1,0 +1,16 @@
+[Unit]
+Description=Mirador Monitoring Service     
+After=syslog.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/home/darsh/github/TheMirador/
+ExecStart=/home/darsh/github/TheMirador/watch.py -c /home/darsh/github/TheMirador/watch.conf -cli
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+
