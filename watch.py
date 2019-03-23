@@ -23,3 +23,4 @@ if __name__ == "__main__":
         print("\t"+folder)
     #first_run(config)
     #check_hash(config)
+    check_accessed(config)

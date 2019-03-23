@@ -46,8 +46,7 @@ def hash_folder(config, folder):
     final_json = []
     for line in str(hashes).split("\\n")[:-1]:
         hash_path = line.split(' ')
-        final_json.append({"hash": hash_path[0], "location": hash_path[2], "modified": str(
-            time.ctime(os.path.getmtime(hash_path[2])))})
+        final_json.append({"hash": hash_path[0], "location": hash_path[2], "modified": os.stat(hash_path[2]).st_atime})
     return final_json
 
 
@@ -76,3 +75,21 @@ def check_hash(config):
         print('Files Modified: ')
         print(list(set(dict.fromkeys(modified_files))))
             
+def check_accessed(config):
+    work_dir = config["work_dir"]
+    for folder in config["watch_folders"]:
+        hex_folder = hashlib.md5(str(folder).encode('utf-8')).hexdigest()
+        path = work_dir+'/'+hex_folder
+        with open(path, 'rb') as f:
+            loaded_hash = json.loads(f.read())
+        loaded_hash = [(x['modified'],x['location']) for x in loaded_hash]
+        current_hash = []
+        for x in loaded_hash:
+            try:
+                current_hash.append((os.stat(x[1]).st_atime,x[1]))
+            except FileNotFoundError:
+                return
+        modified_files = [x for x in loaded_hash + current_hash if x not in loaded_hash or x not in current_hash]
+        print('Files Modified: ')
+        print(list(set(dict.fromkeys(modified_files))))
+
