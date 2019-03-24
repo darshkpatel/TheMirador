@@ -6,8 +6,8 @@ After=syslog.target
 Type=simple
 User=root
 Group=root
-WorkingDirectory=/home/darsh/github/TheMirador/
-ExecStart=/home/darsh/github/TheMirador/watch.py -c /home/darsh/github/TheMirador/watch.conf -cli
+WorkingDirectory/opt/mirador/TheMirador/
+ExecStart=/opt/mirador/TheMirador/watch.py -c /opt/mirador/TheMirador/watch.conf -cli
 StandardOutput=syslog
 StandardError=syslog
 
