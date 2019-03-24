@@ -6,7 +6,7 @@ import time
 import subprocess
 import json
 watch_folders = []
-from iptables import write_to_log
+from log_manage import *
 
 def is_valid_file(parser, arg):
     if not os.path.exists(arg):
@@ -15,12 +15,13 @@ def is_valid_file(parser, arg):
         return open(arg, 'r')
 
 
-def first_run(config):
+def first_run_folders(config):
     work_dir = config["work_dir"]
     if os.path.isdir(work_dir):
         shutil.rmtree(work_dir)
         os.mkdir(work_dir)
         os.chdir(work_dir)
+        #print("DELETED")
     else:
         os.mkdir(work_dir)
         os.chdir(work_dir)
@@ -28,26 +29,38 @@ def first_run(config):
     work_dir = config["logpath"]
     if os.path.isdir(work_dir):
         shutil.rmtree(work_dir)
+        #print("DELETED")
         os.mkdir(work_dir)
         os.chdir(work_dir)
     else:
         os.mkdir(work_dir)
         os.chdir(work_dir)
-
     with open(config['logpath']+'.lastreported', 'w') as f:
         f.write('')
+    
+    with open(config['logpath']+'mirador.log', 'w') as f:
+        f.write('')
+
+def first_run(config):
+    first_run_folders(config)
+    work_dir = config["work_dir"]
+    from iptables import write_to_log
+
     write_to_log(work_dir+"iptables.log")
     hash_watch_folders(config)
 
 
 def hash_folder(config, folder):
-    hashes = subprocess.check_output(
-        "find {} -type f | xargs md5sum ".format(folder), shell=True)
+    work_dir = config["work_dir"]
+    os.chdir(work_dir)
+    cmd = "find {} -type f | xargs md5sum ".format(folder)
+    hashes = subprocess.check_output(cmd , shell=True)
     final_json = []
     for line in str(hashes).split("\\n")[:-1]:
         hash_path = line.split(' ')
         final_json.append({"hash": hash_path[0], "location": hash_path[2], "accessed": os.stat(
             hash_path[2]).st_atime})
+    #print(final_json)
     return final_json
 
 
@@ -60,7 +73,7 @@ def hash_watch_folders(config):
         path = work_dir+'/'+hex_folder
         with open(path, 'w', encoding="utf-8") as f:
             f.write(json.dumps(hashes))
-            print("Wrote baseline for {} at {}".format(folder, path))
+            log("Wrote baseline for {} at {}".format(folder, path))
 
 
 def check_hash(config):
@@ -75,7 +88,7 @@ def check_hash(config):
         loaded_hash = [(x['hash'], x['location']) for x in loaded_hash]
         modified_files = [x for x in loaded_hash +
                           current_hash if x not in loaded_hash or x not in current_hash]
-        #print('Watching Files Modified: ')with open(path, 'w', encoding="utf-8") as f:
+        #logging.info('Watching Files Modified: ')with open(path, 'w', encoding="utf-8") as f:
         update_access_time(config)
         return list(set(dict.fromkeys(modified_files)))
 
@@ -109,5 +122,5 @@ def check_accessed(config):
                 return
         modified_files = [x for x in loaded_hash +
                           current_hash if x not in loaded_hash or x not in current_hash]
-       # print('Watching Files Accessed: ')
+       # logging.info('Watching Files Accessed: ')
         return list(set(dict.fromkeys(modified_files)))

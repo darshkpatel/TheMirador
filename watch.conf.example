@@ -8,6 +8,7 @@
         "/tmp/1"
         ],
     "email_to":"darshkpatel@gmail.com",
-    "system_name": "inspiron"
+    "system_name": "inspiron",
+    "dump_memory": "false"
     
 }

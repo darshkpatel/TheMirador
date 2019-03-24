@@ -1,5 +1,4 @@
 import os,json
-
 f = open("watch.conf", "r")
 hostname = json.load(f)["system_name"]
 f.close()

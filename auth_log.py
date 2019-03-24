@@ -5,7 +5,7 @@ import sys
 import json
 import os
 from send_mail import send_mail
-
+from log_manage import log
 f = open("watch.conf", "r")
 fj = json.load(f)
 LOGS_PATH = fj["logpath"]
@@ -31,14 +31,21 @@ def update_auth_logs():
             if b'USER=root' in line and b'mirador' not in line:
                 logfile.write(str(line))
                 email = True
+            if b'sshd' in line:
+                logfile.write(str(line))
+                email = True
         logfile.close()
     if email:
         with open(LOG_FILE_PATH, "r") as logfile:
-            print("Something found in Auth Logs ")
-            send_mail("Command run as root",
+            log("Something found in Auth Logs ")
+            send_mail("Alert in authlogs ",
                       logfile.read(), EMAIL_TO)
     f = open(LAST_REPORTED_PATH, "w")
-    f.write(str(line_timestamp))
+    try:
+        f.write(str(line_timestamp))
+    except UnboundLocalError:
+        #log("No auth logs found")
+        pass
     f.close()
 
 
@@ -49,7 +56,7 @@ def check_auth_log():
             if timestamp > time.time():
                 # send_mail()  # send a mail to the sysadmin
                 with open(LOG_FILE_PATH, "r") as logfile:
-                    print("Tampered auth file")
+                    log("Tampered auth file")
                     send_mail("Tampered .lastreported file",
                               logfile.read(), EMAIL_TO)
             else:

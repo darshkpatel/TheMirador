@@ -1,11 +1,7 @@
-import subprocess, json
+import subprocess, json, os
+from log_manage import log
+DEVNULL = open(os.devnull, 'wb')
 
-f = open("watch.conf", "r")
-LOGS_PATH = json.load(f)["logpath"]
-f.close()
-
-IPTABLES_LOGS_PATH = LOGS_PATH + "iptables.log"
-IPTABLES_TEMP_LOGS_PATH = LOGS_PATH+"iptables.tmplog"
 
 
 def write_to_log(path):
@@ -16,15 +12,19 @@ def write_to_log(path):
             f.write(str(line))
 
 
-def check_iptables():
+def check_iptables(config):
+    IPTABLES_LOGS_PATH = config["logpath"] + "iptables.log"
+    IPTABLES_TEMP_LOGS_PATH = config["logpath"]+"iptables.tmplog"
+
     write_to_log(IPTABLES_TEMP_LOGS_PATH)
     cmd = ["diff", IPTABLES_LOGS_PATH, IPTABLES_TEMP_LOGS_PATH]
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=DEVNULL)
     if proc.stdout.readlines():
         # send mail
-        print("Iptables are Modified")
+        log("Iptables are Modified")
         write_to_log(IPTABLES_LOGS_PATH)
     else:
-        print("Iptables not modified")
+        #log("Iptables not modified")
+        pass
 
 

@@ -3,6 +3,8 @@
 from helpers import *
 from iptables import check_iptables
 from auth_log import check_auth_log
+from send_mail import send_mail
+
 if __name__ == "__main__":
     from argparse import ArgumentParser
     import sys
@@ -17,50 +19,36 @@ if __name__ == "__main__":
 
     print("Loading Config")
     config = json.load(args.filename)
-    print("Watching Folders: ")
-    for folder in config["watch_folders"]:
-        print("\t"+folder)
+    hostname = config["system_name"]
+    #first_run_folders(config)
+
+    log("Started Monitoring")    
+    log("Watching Folders: "+str(', '.join(config["watch_folders"])))
     if not os.path.isdir(config["work_dir"]):
-        print("Baseline Not Generated, Generating")
+        log("Baseline Not Generated, Generating")
         first_run(config)
     if args.map:
         hash_watch_folders(config)
     if args.cli:
-<<<<<<< HEAD
         while True:
             accessed_files = check_accessed(config)
             if len(accessed_files)>0:
-                print("File Accessed inside folder")
-                
-                print(accessed_files)
+                log("File Accessed inside folder")
+                send_mail("File Access Alert",str(accessed_files),config['email_to'])
+                log(accessed_files)
             else:
-                print("Files not Accessed since last check")
+                #log("Files not Accessed since last check")
+                pass
             hash_files = check_hash(config)
             if(len(hash_files)>0):
-                print("Integrity Check Failed")
-                print(hash_files)
+                log("Integrity Check Failed")
+                send_mail("File Integrity Check Failed",str(hash_files),config['email_to'])
+                log(hash_files)
                 hash_watch_folders(config)
             else:
-                print("File Integrity Intact")
+                #log("File Integrity Intact")
+                pass
             
-            check_iptables()
+            check_iptables(config)
             check_auth_log()
-            time.sleep(30)
-=======
-        accessed_files = check_accessed(config)
-        if len(accessed_files) > 0:
-            print("File Accessed inside folder")
-            print(accessed_files)
-        else:
-            print("Files not Accessed since last check")
-        hash_files = check_hash(config)
-        if(len(hash_files) > 0):
-            print("Integrity Check Failed")
-            print(hash_files)
-            hash_watch_folders(config)
-        else:
-            print("File Integrity Intact")
-
-        check_iptables()
-        check_auth_log()
->>>>>>> aab30e8759fae400e1ac8ba98ec4da236347ab32
+            time.sleep(10)
