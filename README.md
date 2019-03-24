@@ -21,8 +21,34 @@ TheMirador is an watchtower for linux systems, it monitors user configured syste
   cd TheMirador
   sudo make clean
   sudo make sense
+  ```
+ 
+ Edit the watch.conf file according to your needs
+  here's an example config
+ 
+ ```
+  {
+    "logpath": "/var/log/mirador",
+    "work_dir":"/home/darsh/.mirador",
+    "watch_folders":[
+        "/tmp/secret_folder"
+        ],
+    "email_to":"darshkpatel@gmail.com",
+    "system_name": "inspiron",
+    "dump_memory": "false"
+    
+}
+  ```
+  ```
+  sudo systemctl enable mirador.service
   sudo systemctl start mirador.service
   ```
+  
+  ### How it works:
+  When it's first run it creates a baseline for normal system resources, it stores the hashes in the work_dir folder then 
+  it continously monitors the system for changes and file accesses. 
+  It also monitors common system resources such as the iptables and sudo auth and ssh logs
+  
   
 
 ### For Future Releases:
