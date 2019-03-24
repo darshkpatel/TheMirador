@@ -1,0 +1,13 @@
+{
+    "logfiles":[
+        "/var/log/pacman.log"
+    ],
+    "logpath": "/tmp/mirador/logs/",
+    "work_dir":"/tmp/mirador",
+    "watch_folders":[
+        "/tmp/1"
+        ],
+    "email_to":"darshkpatel@gmail.com",
+    "system_name": "inspiron"
+    
+}
