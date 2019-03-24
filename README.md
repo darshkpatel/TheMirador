@@ -3,14 +3,16 @@
 
 ## ToDo
 
-*  Log Analysis for SSH Logins Etc.
-*  new package installed
-*  Sign Emails
-*  File Integrity Checking
-*  Firewall rules watch
-*  Rootkit Detection
-*  Sanity Checks for input params
-*  Systemd service 
-* Not in sudoers
-*  LogRotation Support
-* logs for incident for forensics
+*  Log Analysis for SSH Logins Etc. (Done, Testing left)
+*  new package installed (---REMAINING---)
+*  Sign Emails ( Next Version )
+*  File Integrity Checking ( Done )
+*  Firewall rules watch ( Done )
+*  Rootkit Detection (---REMAINING----) Run along with setup script
+*  Sanity Checks for input params ( Future Release )
+*  Systemd service ( Done, Integration left )
+* Not in sudoers   ( testing left ?? )
+*  LogRotation Support ( Future release )
+* logs for incident for forensics ( --- REMAINING --)
+
+- remove errant prints (--REMAINING--)
