@@ -38,6 +38,7 @@ if __name__ == "__main__":
                 log(accessed_files)
             else:
                 #log("Files not Accessed since last check")
+                #print("Access Pass!")
                 pass
             hash_files = check_hash(config)
             if(len(hash_files)>0):
@@ -51,4 +52,4 @@ if __name__ == "__main__":
             
             check_iptables(config)
             check_auth_log()
-            time.sleep(10)
+            time.sleep(5)
