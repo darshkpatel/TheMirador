@@ -1,4 +1,4 @@
-#!/usr/bin/python31 -u
+#!/usr/bin/python3 -u
 
 from helpers import *
 from iptables import check_iptables
@@ -20,8 +20,6 @@ if __name__ == "__main__":
     print("Loading Config")
     config = json.load(args.filename)
     hostname = config["system_name"]
-    #first_run_folders(config)
-
     log("Started Monitoring")    
     log("Watching Folders: "+str(', '.join(config["watch_folders"])))
     if not os.path.isdir(config["work_dir"]):
@@ -37,8 +35,6 @@ if __name__ == "__main__":
                 send_mail("File Access Alert",str(accessed_files),config['email_to'])
                 log(accessed_files)
             else:
-                #log("Files not Accessed since last check")
-                #print("Access Pass!")
                 pass
             hash_files = check_hash(config)
             if(len(hash_files)>0):
@@ -47,7 +43,6 @@ if __name__ == "__main__":
                 log(hash_files)
                 hash_watch_folders(config)
             else:
-                #log("File Integrity Intact")
                 pass
             
             check_iptables(config)
