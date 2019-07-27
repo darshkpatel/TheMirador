@@ -1,7 +1,7 @@
 # TheMirador
 
 TheMirador is an watchtower for linux systems, it monitors user configured system file integrity and access, sudo command access, ssh logins, iptables changes, it emails the admin on any of this events using postfix and also logs the incidents and will also dump system memory contents to a file for forensics. We also run a rootkit scan on installation and email the results to the admin. We also made a systemd service for the same.
-
+**NOTE: This was developed in a Hackathon , and is just a proof of concept IDS**
 
 ### Key Implemented Features:
 
