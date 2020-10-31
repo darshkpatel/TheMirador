@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -u
 
 from helpers import *
-from iptables import check_iptables
+# from iptables import check_iptables
 from auth_log import check_auth_log
 from send_mail import send_mail
 
@@ -45,6 +45,6 @@ if __name__ == "__main__":
             else:
                 pass
             
-            check_iptables(config)
+            # check_iptables(config)
             check_auth_log()
             time.sleep(5)

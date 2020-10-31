@@ -40,13 +40,15 @@ def first_run_folders(config):
     
     with open(config['logpath']+'mirador.log', 'w') as f:
         f.write('')
+    print(work_dir+"/iptables.log")
+    from iptables import write_to_log
+    write_to_log(work_dir+"/iptables.log")
+
 
 def first_run(config):
     first_run_folders(config)
     work_dir = config["work_dir"]
-    from iptables import write_to_log
 
-    write_to_log(work_dir+"iptables.log")
     hash_watch_folders(config)
 
 
